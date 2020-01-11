@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(MyApp());
+void main() {runApp(MyApp());
+SystemChrome.setEnabledSystemUIOverlays([]);
+
+
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -75,51 +81,64 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         backgroundColor: Color(0xFFefeeee),
         body: Center(
           child: AspectRatio(
             aspectRatio: 5 / 3,
             child: Center(
               child: Stack(
+
+
                 children: <Widget>[
 
-                  Container(
-                    height: 100,
-                    width: 200,
-                    color: Color(0xffefeeee),
-                    child: Stack(children: [
-                      Positioned(
-                        left: 100,
-                        child: Container(
-                          color: Colors.green,
-                          child: Transform(
-                            alignment: FractionalOffset.centerLeft,
-                            transform: new Matrix4.rotationZ(
-                                (animation.value) * 3.14 / 180),
-                            child: Container(
-                              width: 100,
-                              child: LinearProgressIndicator(
-                                backgroundColor: Colors.grey,
-                                value: _counter.truncateToDouble() / 100,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.amber,
+                  Positioned(
+                    top:270 ,
+                    left:MediaQuery.of(context).size.width/2-150 ,
+                    child: Container(
+                      height: 100,
+                      width: 200,
+                      color: Color(0xffefeeee),
+                      child: Stack(children: [
+                        Positioned(
+                          left: 100,
+                          child: Container(
+//                            color: Colors.green,
+                            child: Transform(
+                              alignment: FractionalOffset.centerLeft,
+                              transform: new Matrix4.rotationZ(
+                                  (animation.value) * 3.14 / 180),
+                              child: Container(
+                                width: 80,
+                                height: 15,
+                                child: LinearProgressIndicator(
+
+                                  backgroundColor: Colors.grey,
+                                  value: _counter.truncateToDouble() / 100,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.amber,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      Positioned(
-                          top: 76,
-                          left: 20,
-                          child: Container(
-                              color: Colors.green, child: Text('$angle')))
-                    ]),
+                        Positioned(
+                            top: 76,
+                            left: 20,
+                            child: Container(
+                                color: Colors.green, child: Text('$angle')))
+                      ]),
+                    ),
                   ),
 
 
-                  Container(
-                    decoration: BoxDecoration(
+                  Positioned(
+                    top: 0,
+                    left:MediaQuery.of(context).size.width/2-250/2-50 ,
+
+                    child: Container(
+                      decoration: BoxDecoration(
 //                    gradient: LinearGradient(
 //                      begin: Alignment.topLeft,
 //                      end: Alignment.bottomRight,
@@ -127,40 +146,41 @@ class _MyHomePageState extends State<MyHomePage>
 
 //                    ),
 //                    borderRadius: BorderRadius.circular(250 / 2),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
 
-                            offset: Offset(9, 9),
-                            color: Color(0xffcbcaca),
-                            blurRadius: 20),
-                        BoxShadow(
-                            offset: Offset(-9, -9),
-                            color: Color(0xffffffff),
-                            blurRadius: 20)
-                      ],
-                    ),
-                    margin: EdgeInsets.only(top: 30),
-                    height: 250,
-                    width: 250,
-                    child: Card(
-                      color: Color(0xffefeeee),
+                              offset: Offset(9, 9),
+                              color: Color(0xffcbcaca),
+                              blurRadius: 20),
+                          BoxShadow(
+                              offset: Offset(-9, -9),
+                              color: Color(0xffffffff),
+                              blurRadius: 20)
+                        ],
+                      ),
+                      margin: EdgeInsets.only(top: 30),
+                      height: 250,
+                      width: 250,
+                      child: Card(
+                        color: Color(0xffefeeee),
 //            elevation: 1,
-                      child: Container(
-                        height: 250,
-                          width: 250,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [Color(0xffffffff).withOpacity(0.5), Color(0xffd7d6d6).withOpacity(0.5)]),),
+                        child: Container(
+                          height: 250,
+                            width: 250,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [Color(0xffffffff).withOpacity(0.5), Color(0xffd7d6d6).withOpacity(0.5)]),),
 
-                          child: Center(child: Text('pm',style: TextStyle(fontSize: 40),))),
-                      shape: CircleBorder(
-                          side: BorderSide(
-                            width: 1,
-                              color: Color(0xFFFFFF).withOpacity(0.2))),
+                            child: Center(child: Text('pm',style: TextStyle(fontSize: 40),))),
+                        shape: CircleBorder(
+                            side: BorderSide(
+                              width: 1,
+                                color: Color(0xFFFFFF).withOpacity(0.2))),
+                      ),
                     ),
                   ),
 
