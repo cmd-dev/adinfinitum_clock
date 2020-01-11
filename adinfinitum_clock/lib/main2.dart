@@ -1,18 +1,18 @@
+import 'package:analog_clock/drawn_hand.dart';
+import 'package:analog_clock/hand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
 
-void main() {runApp(MyApp());
-SystemChrome.setEnabledSystemUIOverlays([]);
-
-
+void main() {
+  runApp(MyApp());
+  SystemChrome.setEnabledSystemUIOverlays([]);
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -39,6 +39,8 @@ class _MyHomePageState extends State<MyHomePage>
   double angle;
   int _counter = 0;
   double milliseconds;
+  String pendulumText = 'tik';
+
 
   void incrementCounter() {
     setState(() {
@@ -81,24 +83,23 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
         backgroundColor: Color(0xFFefeeee),
         body: Center(
           child: AspectRatio(
             aspectRatio: 5 / 3,
             child: Center(
               child: Stack(
-
-
                 children: <Widget>[
-
                   Positioned(
-                    top:270 ,
-                    left:MediaQuery.of(context).size.width/2-150 ,
+                    top: 270,
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 2 - 150,
                     child: Container(
                       height: 100,
                       width: 200,
-                      color: Color(0xffefeeee),
+                      color: Color(0xffefeefa),
                       child: Stack(children: [
                         Positioned(
                           left: 100,
@@ -108,17 +109,29 @@ class _MyHomePageState extends State<MyHomePage>
                               alignment: FractionalOffset.centerLeft,
                               transform: new Matrix4.rotationZ(
                                   (animation.value) * 3.14 / 180),
-                              child: Container(
-                                width: 80,
-                                height: 15,
-                                child: LinearProgressIndicator(
-
-                                  backgroundColor: Colors.grey,
-                                  value: _counter.truncateToDouble() / 100,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.amber,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: 50,
+                                    height: 15,
+                                    child: LinearProgressIndicator(
+                                      backgroundColor: Color(0xffefeeee),
+                                      value: _counter.truncateToDouble() / 100,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.amber,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  RotatedBox(
+                                      quarterTurns: 3,
+                                      child: Text(animationController.status ==
+                                          AnimationStatus.forward
+                                          ? 'tok'
+                                          : 'tik',
+                                        style: TextStyle(fontSize: 30),))
+
+
+                                ],
                               ),
                             ),
                           ),
@@ -127,16 +140,17 @@ class _MyHomePageState extends State<MyHomePage>
                             top: 76,
                             left: 20,
                             child: Container(
-                                color: Colors.green, child: Text('$angle')))
+                                color: Colors.green,
+                                child: Text('$angle'.substring(0, 4))))
                       ]),
                     ),
                   ),
-
-
                   Positioned(
                     top: 0,
-                    left:MediaQuery.of(context).size.width/2-250/2-50 ,
-
+                    left: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 2 - 250 / 2 - 50,
                     child: Container(
                       decoration: BoxDecoration(
 //                    gradient: LinearGradient(
@@ -149,7 +163,6 @@ class _MyHomePageState extends State<MyHomePage>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-
                               offset: Offset(9, 9),
                               color: Color(0xffcbcaca),
                               blurRadius: 20),
@@ -160,30 +173,40 @@ class _MyHomePageState extends State<MyHomePage>
                         ],
                       ),
                       margin: EdgeInsets.only(top: 30),
-                      height: 250,
-                      width: 250,
+                      height: 230,
+                      width: 230,
                       child: Card(
                         color: Color(0xffefeeee),
 //            elevation: 1,
                         child: Container(
-                          height: 250,
-                            width: 250,
+                            height: 230,
+                            width: 230,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [Color(0xffffffff).withOpacity(0.5), Color(0xffd7d6d6).withOpacity(0.5)]),),
-
-                            child: Center(child: Text('pm',style: TextStyle(fontSize: 40),))),
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color(0xffffffff).withOpacity(0.5),
+                                    Color(0xffd7d6d6).withOpacity(0.5)
+                                  ]),
+                            ),
+                            child: Center(
+                              child: DrawnHand(
+                                color: Colors.red,
+                                size: 0.5,
+                                angleRadians: _counter.truncateToDouble() / 60 *
+                                    3.1415,
+                                thickness: 8,
+                              ),
+                            )),
                         shape: CircleBorder(
                             side: BorderSide(
-                              width: 1,
+                                width: 1,
                                 color: Color(0xFFFFFF).withOpacity(0.2))),
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -191,3 +214,4 @@ class _MyHomePageState extends State<MyHomePage>
         ));
   }
 }
+//Text('pm',style: TextStyle(fontSize: 40),)
