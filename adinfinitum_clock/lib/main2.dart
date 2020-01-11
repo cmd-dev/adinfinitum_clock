@@ -1,8 +1,9 @@
+import 'package:analog_clock/AppColor.dart';
 import 'package:analog_clock/drawn_hand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_clock_helper/model.dart';
 void main() {
   runApp(MyApp());
   SystemChrome.setEnabledSystemUIOverlays([]);
@@ -15,9 +16,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Center(
+        child: AspectRatio(
+            aspectRatio: 5 / 3,
+            child: MyHomePage(title: 'Flutter Demo Home Page')),
+      ),
     );
   }
 }
@@ -39,7 +43,8 @@ class _MyHomePageState extends State<MyHomePage>
   int _counter = 0;
   double milliseconds;
   String pendulumText = 'tik';
-  int sec;
+  int sec = 0;
+
 
   void incrementCounter() {
     setState(() {
@@ -64,6 +69,8 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
+
+
     animationController =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
     animation =
@@ -82,10 +89,14 @@ class _MyHomePageState extends State<MyHomePage>
 //     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+    MyTheme theme = MyTheme();
+
+
     return Scaffold(
-        backgroundColor: Color(0xFFefeeee),
+        backgroundColor: theme.main,
         body: Center(
           child: AspectRatio(
             aspectRatio: 5 / 3,
@@ -93,15 +104,15 @@ class _MyHomePageState extends State<MyHomePage>
               child: Stack(
                 children: <Widget>[
                   Positioned(
-                    top: 270,
+                    top: 250,
                     left: MediaQuery
                         .of(context)
                         .size
-                        .width / 2 - 150,
+                        .width / 2 - 160,
                     child: Container(
-                      height: 100,
+                      height: 200,
                       width: 200,
-                      color: Color(0xffefeefa),
+                      color: theme.main,
                       child: Stack(children: [
                         Positioned(
                           left: 100,
@@ -112,9 +123,11 @@ class _MyHomePageState extends State<MyHomePage>
                               transform: new Matrix4.rotationZ(
                                   (animation.value) * 3.14 / 180),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    width: 50,
+                                    width: 70,
                                     height: 15,
                                     child: LinearProgressIndicator(
                                       backgroundColor: Color(0xffefeeee),
@@ -131,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage>
                                             AnimationStatus.forward
                                             ? 'tok'
                                             : 'tik',
-                                        style: TextStyle(fontSize: 30),
+                                        style: TextStyle(fontSize: 30,
+                                            fontWeight: FontWeight.w200),
                                       ))
                                 ],
                               ),
@@ -165,23 +179,35 @@ class _MyHomePageState extends State<MyHomePage>
 
 class ClockCard extends StatelessWidget {
   ClockCard({
-    this.snowy,
-    this.rainy,
-    this.sunny,
     Key key,
     @required int seconds,
   })
       : _seconds = seconds,
         super(key: key);
-
   int _seconds;
   double sunny;
   double rainy;
   double snowy;
 
+
+  List<Color> defaultSet = [];
+
+//  List<Color> sunColors=[];
+
+
+  String loc;
+
   @override
   Widget build(BuildContext context) {
-    print(_seconds);
+    MyTheme theme = MyTheme();
+
+
+//    x.addListener(()=>
+//
+//        loc=x.location
+//
+//    );
+
     return Container(
       decoration: BoxDecoration(
 //                    gradient: LinearGradient(
@@ -194,17 +220,16 @@ class ClockCard extends StatelessWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-              offset: Offset(9, 9), color: Color(0xffcbcaca), blurRadius: 20),
+              offset: Offset(6, 6), color: theme.shade1, blurRadius: 12),
           BoxShadow(
-              offset: Offset(-9, -9), color: Color(0xffffffff), blurRadius: 20)
+              offset: Offset(-6, -6), color: theme.shade2, blurRadius: 12)
         ],
       ),
       margin: EdgeInsets.only(top: 30),
       height: 230,
       width: 230,
       child: Card(
-        color: Color(0xffefeeee),
-//            elevation: 1,
+        color: theme.main,
         child: Container(
             height: 230,
             width: 230,
@@ -214,8 +239,8 @@ class ClockCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xffffffff).withOpacity(0.5),
-                    Color(0xffd7d6d6).withOpacity(0.5)
+                    theme.gradient1.withOpacity(0.5),
+                    theme.gradient2.withOpacity(0.5)
                   ]),
             ),
             child: Center(
@@ -228,7 +253,7 @@ class ClockCard extends StatelessWidget {
             )),
         shape: CircleBorder(
             side:
-            BorderSide(width: 1, color: Color(0xFFFFFF).withOpacity(0.2))),
+            BorderSide(width: 1, color: theme.border.withOpacity(0.2))),
       ),
     );
   }
