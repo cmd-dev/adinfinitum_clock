@@ -1,5 +1,4 @@
 import 'package:analog_clock/drawn_hand.dart';
-import 'package:analog_clock/hand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
@@ -40,13 +39,15 @@ class _MyHomePageState extends State<MyHomePage>
   int _counter = 0;
   double milliseconds;
   String pendulumText = 'tik';
-
+  int sec;
 
   void incrementCounter() {
     setState(() {
       angle = animation.value;
       milliseconds = angle;
-
+      sec = DateTime
+          .now()
+          .second;
       if (animationController.status == AnimationStatus.completed) {
         animationController.reverse();
         _counter++;
@@ -62,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   void initState() {
+    super.initState();
     animationController =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
     animation =
@@ -124,13 +126,13 @@ class _MyHomePageState extends State<MyHomePage>
                                   ),
                                   RotatedBox(
                                       quarterTurns: 3,
-                                      child: Text(animationController.status ==
-                                          AnimationStatus.forward
-                                          ? 'tok'
-                                          : 'tik',
-                                        style: TextStyle(fontSize: 30),))
-
-
+                                      child: Text(
+                                        animationController.status ==
+                                            AnimationStatus.forward
+                                            ? 'tok'
+                                            : 'tik',
+                                        style: TextStyle(fontSize: 30),
+                                      ))
                                 ],
                               ),
                             ),
@@ -151,8 +153,37 @@ class _MyHomePageState extends State<MyHomePage>
                         .of(context)
                         .size
                         .width / 2 - 250 / 2 - 50,
-                    child: Container(
-                      decoration: BoxDecoration(
+                    child: ClockCard(seconds: sec),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+}
+
+class ClockCard extends StatelessWidget {
+  ClockCard({
+    this.snowy,
+    this.rainy,
+    this.sunny,
+    Key key,
+    @required int seconds,
+  })
+      : _seconds = seconds,
+        super(key: key);
+
+  int _seconds;
+  double sunny;
+  double rainy;
+  double snowy;
+
+  @override
+  Widget build(BuildContext context) {
+    print(_seconds);
+    return Container(
+      decoration: BoxDecoration(
 //                    gradient: LinearGradient(
 //                      begin: Alignment.topLeft,
 //                      end: Alignment.bottomRight,
@@ -160,58 +191,46 @@ class _MyHomePageState extends State<MyHomePage>
 
 //                    ),
 //                    borderRadius: BorderRadius.circular(250 / 2),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(9, 9),
-                              color: Color(0xffcbcaca),
-                              blurRadius: 20),
-                          BoxShadow(
-                              offset: Offset(-9, -9),
-                              color: Color(0xffffffff),
-                              blurRadius: 20)
-                        ],
-                      ),
-                      margin: EdgeInsets.only(top: 30),
-                      height: 230,
-                      width: 230,
-                      child: Card(
-                        color: Color(0xffefeeee),
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+              offset: Offset(9, 9), color: Color(0xffcbcaca), blurRadius: 20),
+          BoxShadow(
+              offset: Offset(-9, -9), color: Color(0xffffffff), blurRadius: 20)
+        ],
+      ),
+      margin: EdgeInsets.only(top: 30),
+      height: 230,
+      width: 230,
+      child: Card(
+        color: Color(0xffefeeee),
 //            elevation: 1,
-                        child: Container(
-                            height: 230,
-                            width: 230,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xffffffff).withOpacity(0.5),
-                                    Color(0xffd7d6d6).withOpacity(0.5)
-                                  ]),
-                            ),
-                            child: Center(
-                              child: DrawnHand(
-                                color: Colors.red,
-                                size: 0.5,
-                                angleRadians: _counter.truncateToDouble() / 60 *
-                                    3.1415,
-                                thickness: 8,
-                              ),
-                            )),
-                        shape: CircleBorder(
-                            side: BorderSide(
-                                width: 1,
-                                color: Color(0xFFFFFF).withOpacity(0.2))),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+        child: Container(
+            height: 230,
+            width: 230,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xffffffff).withOpacity(0.5),
+                    Color(0xffd7d6d6).withOpacity(0.5)
+                  ]),
             ),
-          ),
-        ));
+            child: Center(
+              child: DrawnHand(
+                color: Colors.red,
+                size: 0.5,
+                angleRadians: _seconds.truncateToDouble() * 0.10472,
+                thickness: 8,
+              ),
+            )),
+        shape: CircleBorder(
+            side:
+            BorderSide(width: 1, color: Color(0xFFFFFF).withOpacity(0.2))),
+      ),
+    );
   }
 }
 //Text('pm',style: TextStyle(fontSize: 40),)

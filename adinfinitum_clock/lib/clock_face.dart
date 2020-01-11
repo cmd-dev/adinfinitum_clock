@@ -36,6 +36,7 @@ class _FaceState extends State<Face> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
+    super.initState();
     animationController =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
     animation =
