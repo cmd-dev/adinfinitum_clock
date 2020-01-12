@@ -1,9 +1,11 @@
 import 'package:analog_clock/AppColor.dart';
+import 'package:analog_clock/Clocktext.dart';
 import 'package:analog_clock/drawn_hand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_clock_helper/model.dart';
+
 void main() {
   runApp(MyApp());
   SystemChrome.setEnabledSystemUIOverlays([]);
@@ -15,13 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-      ),
-      home: Center(
-        child: AspectRatio(
-            aspectRatio: 5 / 3,
-            child: MyHomePage(title: 'Flutter Demo Home Page')),
-      ),
+      theme: ThemeData(),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -44,7 +41,6 @@ class _MyHomePageState extends State<MyHomePage>
   double milliseconds;
   String pendulumText = 'tik';
   int sec = 0;
-
 
   void incrementCounter() {
     setState(() {
@@ -70,7 +66,6 @@ class _MyHomePageState extends State<MyHomePage>
   void initState() {
     super.initState();
 
-
     animationController =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
     animation =
@@ -89,11 +84,9 @@ class _MyHomePageState extends State<MyHomePage>
 //     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     MyTheme theme = MyTheme();
-
 
     return Scaffold(
         backgroundColor: theme.main,
@@ -144,7 +137,8 @@ class _MyHomePageState extends State<MyHomePage>
                                             AnimationStatus.forward
                                             ? 'tok'
                                             : 'tik',
-                                        style: TextStyle(fontSize: 30,
+                                        style: TextStyle(
+                                            fontSize: 30,
                                             fontWeight: FontWeight.w200),
                                       ))
                                 ],
@@ -189,18 +183,15 @@ class ClockCard extends StatelessWidget {
   double rainy;
   double snowy;
 
-
   List<Color> defaultSet = [];
 
 //  List<Color> sunColors=[];
-
 
   String loc;
 
   @override
   Widget build(BuildContext context) {
     MyTheme theme = MyTheme();
-
 
 //    x.addListener(()=>
 //
@@ -219,10 +210,9 @@ class ClockCard extends StatelessWidget {
 //                    borderRadius: BorderRadius.circular(250 / 2),
         shape: BoxShape.circle,
         boxShadow: [
+          BoxShadow(offset: Offset(6, 6), color: theme.shade1, blurRadius: 12),
           BoxShadow(
-              offset: Offset(6, 6), color: theme.shade1, blurRadius: 12),
-          BoxShadow(
-              offset: Offset(-6, -6), color: theme.shade2, blurRadius: 12)
+              offset: Offset(-6, -6), color: theme.shade2, blurRadius: 12),
         ],
       ),
       margin: EdgeInsets.only(top: 30),
@@ -231,29 +221,34 @@ class ClockCard extends StatelessWidget {
       child: Card(
         color: theme.main,
         child: Container(
-            height: 230,
-            width: 230,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    theme.gradient1.withOpacity(0.5),
-                    theme.gradient2.withOpacity(0.5)
-                  ]),
+          height: 230,
+          width: 230,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.gradient1.withOpacity(0.5),
+                  theme.gradient2.withOpacity(0.5),
+                ]),
+          ),
+          child: Center(
+            child: Stack(
+              children: <Widget>[
+                ClockText(),
+                DrawnHand(
+                  color: Colors.red,
+                  size: 0.5,
+                  angleRadians: _seconds.truncateToDouble() * 0.10472,
+                  thickness: 8,
+                ),
+              ],
             ),
-            child: Center(
-              child: DrawnHand(
-                color: Colors.red,
-                size: 0.5,
-                angleRadians: _seconds.truncateToDouble() * 0.10472,
-                thickness: 8,
-              ),
-            )),
+          ),
+        ),
         shape: CircleBorder(
-            side:
-            BorderSide(width: 1, color: theme.border.withOpacity(0.2))),
+            side: BorderSide(width: 1, color: theme.border.withOpacity(0.2))),
       ),
     );
   }

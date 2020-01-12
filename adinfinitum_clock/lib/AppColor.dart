@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 
 class MyTheme {
-  var main = Color(0xff9e9e9e);
-  var gradient1 = Color(0xffa9a9a9);
-  var shade1 = Color(0xff868686);
-  var shade2 = Color(0xffb6b6b6);
-  var gradient2 = Color(0xff8e8e8e);
+  Color main = Color(0xff9e9e9e);
+  Color gradient1 = Color(0xffa9a9a9);
+  Color shade1 = Color(0xff868686);
+  Color shade2 = Color(0xffb6b6b6);
+  Color gradient2 = Color(0xff8e8e8e);
   Color border = Colors.grey;
   ClockModel x = new ClockModel();
 
@@ -15,7 +15,7 @@ class MyTheme {
   }
 
   getWeather() {
-    if (x.weatherString == enumToString(WeatherCondition.thunderstorm)) {
+    if (x.weatherString == enumToString(WeatherCondition.sunny)) {
       main = Color(0xff1976d2);
       gradient1 = Color(0xff1b7ee1);
       gradient2 = Color(0xff176abd);
