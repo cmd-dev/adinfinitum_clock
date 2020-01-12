@@ -247,8 +247,8 @@ class ClockCard extends StatelessWidget {
                   angleRadians: _seconds.truncateToDouble() * 0.10472 / 60,
                   thickness: 7,),
                 DrawnHand(
-                  color: _seconds * 6 % 30 == 0 ? Colors.red : Colors.green,
-                  size: 1,
+                  color: Colors.green,
+                  size: _seconds * 6 % 30 == 0 ? 0.8 : 1.0,
                   angleRadians: _seconds.truncateToDouble() * 0.10472,
                   thickness: 8,
                 ),
