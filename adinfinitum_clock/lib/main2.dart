@@ -1,5 +1,6 @@
 import 'package:analog_clock/AppColor.dart';
 import 'package:analog_clock/Clocktext.dart';
+import 'package:analog_clock/container_hand.dart';
 import 'package:analog_clock/drawn_hand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
@@ -237,9 +238,17 @@ class ClockCard extends StatelessWidget {
             child: Stack(
               children: <Widget>[
                 ClockText(),
-                DrawnHand(
-                  color: Colors.red,
+                DrawnHand(color: Colors.cyan,
                   size: 0.5,
+                  angleRadians: _seconds.truncateToDouble() * 0.10472 / 3600,
+                  thickness: 7,),
+                DrawnHand(color: Colors.orange,
+                  size: 0.7,
+                  angleRadians: _seconds.truncateToDouble() * 0.10472 / 60,
+                  thickness: 7,),
+                DrawnHand(
+                  color: _seconds * 6 % 30 == 0 ? Colors.red : Colors.green,
+                  size: 1,
                   angleRadians: _seconds.truncateToDouble() * 0.10472,
                   thickness: 8,
                 ),
