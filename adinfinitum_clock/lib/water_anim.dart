@@ -33,7 +33,7 @@ class MyPainter extends CustomPainter {
 class Water extends CustomPainter {
   Animation animation;
 
-  Water(this.animation);
+  Water(this.animation) : super(repaint: animation);
 
   void paint(Canvas canvas, Size size) {
     canvas.translate(size.width / 2, size.height / 2);
@@ -57,6 +57,7 @@ class Water extends CustomPainter {
         Paint()
           ..color = Colors.red
           ..style = PaintingStyle.stroke);
+    print(animation.value);
     canvas.drawArc(
         Rect.fromCircle(center: Offset(0, 0), radius: animation.value * 100),
         startAngle,
@@ -65,8 +66,8 @@ class Water extends CustomPainter {
         paint);
   }
 
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(Water other) {
+    return other.animation.value != animation.value;
   }
 }
 
@@ -80,7 +81,7 @@ class Pai extends CustomPainter {
       ..color = Colors.red
       ..strokeCap = StrokeCap.butt
       ..style = PaintingStyle.stroke;
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), 100, mpaint);
+    canvas.drawCircle(Offset(size.width / 2, size.height / 2), radius, mpaint);
     canvas.translate(size.width / 2, size.height / 2);
     canvas.scale(1, -1);
     canvas.drawLine(Offset(90, 0), Offset(100, 0), mpaint);
@@ -88,14 +89,12 @@ class Pai extends CustomPainter {
       canvas.rotate(angle);
 
       canvas.drawLine(
-          new Offset(0.0, radius + 80), new Offset(0.0, radius + 90.0), mpaint);
-      print(angle * i * 180 / 3.14);
+          new Offset(0.0, radius - 10), new Offset(0.0, radius), mpaint);
     }
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    // TODO: implement shouldRepaint
     return false;
   }
 }
@@ -131,15 +130,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 4),
+      duration: Duration(seconds: 1),
     )
       ..addListener(() {
-        setState(() {});
+        setState(() {
+
+
+        });
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) animationController.reverse();
         if (status == AnimationStatus.dismissed) animationController.forward();
       });
+
+    animationController.forward();
   }
 
   @override
@@ -149,10 +153,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         title: Text(widget.title),
       ),
       body: Center(
-          child: CustomPaint(
-              foregroundPainter: Water(animationController),
-              painter: Pai(),
-              child: Text('PM'))),
+          child: AnimatedBuilder(
+              animation: animationController,
+              builder: (context, child) {
+                return CustomPaint(
+                  foregroundPainter: Water(animationController),
+                  painter: Pai(),
+                  child: Center(),);
+              })),
       floatingActionButton: FloatingActionButton(
         onPressed: null,
         tooltip: 'Increment',
