@@ -13,3 +13,6 @@ Example [Analog Clock](analog_clock)
 Example [Digital Clock](digital_clock)
 
 <img src='digital_clock/digital.gif' width='350'>
+https://www.reddit.com/r/FlutterDev/comments/elyiqj/toggled_button_with_neomorphic_design/
+https://tubikstudio.com/hot-ui-design-trends/
+https://uxplanet.org/neumorphism-in-user-interface-tutorial-c353698ac5c0
