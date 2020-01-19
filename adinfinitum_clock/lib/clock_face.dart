@@ -8,69 +8,53 @@ import 'AppColor.dart';
 import 'drawn_hand.dart';
 import 'analog_clock.dart';
 class Face extends StatefulWidget {
-  Face({Key key, this.title, this.theme, this.seconds}) : super(key: key);
+  Face({Key key, this.theme, this.animation}) : super(key: key);
   MyTheme theme;
-  int seconds;
-  final String title;
+  Animation animation;
+
 
   @override
   _FaceState createState() => _FaceState();
 }
 
 class _FaceState extends State<Face> with SingleTickerProviderStateMixin {
-  AnimationController animationController;
-  Animation animation;
-  double angle;
-  int _counter = 0;
-  int seconds = 0;
-  double milliseconds;
-  MyTheme theme;
+  DateTime _current = DateTime.now();
 
 
-  void incrementCounter() {
-    setState(() {
-      angle = animation.value;
-      milliseconds = angle;
-
-      if (animationController.status == AnimationStatus.completed) {
-        animationController.reverse();
-        _counter++;
-        if (_counter / 100 == 1) _counter = 0;
-      }
-      if (animationController.status == AnimationStatus.dismissed) {
-        animationController.forward();
-        _counter++;
-        if (_counter / 100 == 1) _counter = 0;
-      }
-    });
-  }
+//  void incrementCounter() {
+//    setState(() {
+//      angle = animation.value;
+//      milliseconds = angle;
+//
+//      if (animationController.status == AnimationStatus.completed) {
+//        animationController.reverse();
+//        _counter++;
+//        if (_counter / 100 == 1) _counter = 0;
+//      }
+//      if (animationController.status == AnimationStatus.dismissed) {
+//        animationController.forward();
+//        _counter++;
+//        if (_counter / 100 == 1) _counter = 0;
+//      }
+//    });
+//  }
 
   @override
   void initState() {
     super.initState();
-    animationController =
-        AnimationController(duration: Duration(seconds: 1), vsync: this);
-    animation =
-        CurvedAnimation(parent: animationController, curve: Curves.easeInOut);
 
-    animation = Tween<double>(begin: 45, end: 135).animate(animation);
-    animationController.addListener(() {
-      incrementCounter();
+    widget.animation.addListener(() {
+      setState(() {
+        _current = DateTime.now();
+      });
     });
-    animationController.forward();
-
-//     animationController.addStatusListener((AnimationStatus)
-//                                           {
-//     if(animationController.status==)
-//       animationController.reverse();}
-//     );
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
       foregroundPainter: Lines(),
-      child: ClockCard(seconds: widget.seconds, theme: widget.theme,),
+      child: ClockCard(current: _current, theme: widget.theme,),
     );
   }
 }
@@ -80,27 +64,20 @@ class Lines extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final radius = size.width / 2;
     final angle = 2 * 3.14 / 60;
-
     Paint mpaint = Paint()
-      ..color = Colors.transparent
+      ..color = Colors.black.withOpacity(0.4)
       ..strokeCap = StrokeCap.butt
       ..style = PaintingStyle.stroke;
     canvas.translate(size.width / 2 + 0.25, size.height / 2 + 15.5);
 
-//    canvas.drawCircle(Offset(0, 0), radius - 5, mpaint);
     canvas.scale(1, -1);
 
-//    canvas.drawPath(, mpaint);
 
-//    TextPainter textPainter=TextPainter(text:TextSpan(text: (i/5).round().toString() ,),textDirection:TextDirection.ltr );
-//    textPainter.layout(
-//      minWidth: 0,
-//      maxWidth: 30,
-//    );
-//    textPainter.paint(canvas,Offset(20,20));
     for (var i = 0; i < 60; i++) {
+      double ticksize = i % 5 == 0 ? radius - 22 : radius - 15;
+
       canvas.drawLine(
-          new Offset(0.0, radius - 20), new Offset(0.0, radius - 5), mpaint);
+          new Offset(0.0, ticksize), new Offset(0.0, radius - 4), mpaint);
 
       canvas.rotate(angle);
     }
@@ -115,11 +92,10 @@ class Lines extends CustomPainter {
 class ClockCard extends StatelessWidget {
   ClockCard({
     Key key, this.theme,
-    int seconds,
+    this.current,
   })
-      : _seconds = seconds,
-        super(key: key);
-  int _seconds;
+      :super(key: key);
+  DateTime current;
   MyTheme theme;
 
   List<Color> defaultSet = [];
@@ -133,21 +109,13 @@ class ClockCard extends StatelessWidget {
     double z = -getSunPositionAsAngle(DateTime.now());
     double x = -6 * cos(z);
     double y = -6 * sin(z);
-//    x.addListener(()=>
-//
-//        loc=x.location
-//
-//    );
 
+    print(current.hour);
+    print(current.minute);
+    print(current.second);
     return Container(
       decoration: BoxDecoration(
-//                    gradient: LinearGradient(
-//                      begin: Alignment.topLeft,
-//                      end: Alignment.bottomRight,
-//                      colors: [Color(0xFFffffff), Color(0xFFd7d6d6)]
 
-//                    ),
-//                    borderRadius: BorderRadius.circular(250 / 2),
         shape: BoxShape.circle,
 
         boxShadow: [
@@ -159,56 +127,67 @@ class ClockCard extends StatelessWidget {
       margin: EdgeInsets.only(top: 30),
       height: 230,
       width: 230,
-      child: Card(
-        color: theme.main,
-        child: Container(
-          height: 230,
-          width: 230,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-                begin: Alignment(-x / 6, -y / 6),
-                end: Alignment(x / 6, y / 6),
-                colors: [
-                  theme.gradient1.withOpacity(0.5),
-                  theme.gradient2.withOpacity(0.5),
-                ]),
-          ),
-          child: Center(
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: Container(
-                      alignment: Alignment.center,
-                      height: 180,
-                      width: 180,
-                      child: ClockText()),
+      child: Stack(
+        children: <Widget>[
+
+          Card(
+            color: theme.main,
+            child: Container(
+              height: 230,
+              width: 230,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                    begin: Alignment(-x / 6, -y / 6),
+                    end: Alignment(x / 6, y / 6),
+                    colors: [
+                      theme.gradient1.withOpacity(0.5),
+                      theme.gradient2.withOpacity(0.5),
+                    ]),
+              ),
+              child: Center(
+                child: Stack(
+                  children: <Widget>[
+                    Center(
+                      child: Container(
+                          alignment: Alignment.center,
+                          height: 180,
+                          width: 180,
+                          child: ClockText()),
+                    ),
+                    DrawnHand(
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
+                        size: 0.5,
+                        angleRadians: current.hour % 12 * 2 * 3.14 / 12,
+                        thickness: 7
+                    ),
+                    DrawnHand(
+                      color: Colors.orange,
+                      size: 0.7,
+                      angleRadians: current.minute * 2 * 3.14 / 60,
+                      thickness: 5,
+                    ),
+                    DrawnHand(
+                      color: Colors.green,
+                      size: current.second * 6 % 30 == 0 ? 0.7 : 1.0,
+                      angleRadians: current.second * 2 * 3.1415 / 60,
+                      thickness: 1,
+                    ),
+                  ],
                 ),
-                DrawnHand(
-                  color: Colors.cyan,
-                  size: 0.5,
-                  angleRadians: _seconds.truncateToDouble() * 0.10472 / 3600,
-                  thickness: 7,
-                ),
-                DrawnHand(
-                  color: Colors.orange,
-                  size: 0.7,
-                  angleRadians: _seconds.truncateToDouble() * 0.10472 / 60,
-                  thickness: 7,
-                ),
-                DrawnHand(
-                  color: Colors.green,
-                  size: _seconds * 6 % 30 == 0 ? 0.8 : 1.0,
-                  angleRadians: _seconds.truncateToDouble() * 0.10472,
-                  thickness: 8,
-                ),
-              ],
+              ),
             ),
+            shape: CircleBorder(
+                side: BorderSide(
+                    width: 1, color: theme.border.withOpacity(0.2))),
           ),
-        ),
-        shape: CircleBorder(
-            side: BorderSide(width: 1, color: theme.border.withOpacity(0.2))),
+
+
+        ],
       ),
     );
   }
 }
+

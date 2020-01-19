@@ -16,13 +16,11 @@ double getSunPositionAsAngle(DateTime current) {
   //if greater than go to night method
   if (current.difference(reference).inSeconds >
       differenceofendwithref.inSeconds) {
-    print('false');
     return 0.1;
   } else {
     double fractionof180deg = differenceofcurrentwithref.inMinutes *
         3.14 /
         differenceofendwithref.inMinutes;
-    print(fractionof180deg);
     return fractionof180deg;
   }
 }

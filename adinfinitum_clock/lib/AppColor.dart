@@ -25,14 +25,6 @@ class MyTheme {
       shade1 = Color(0xff1564b3);
       shade2 = Color(0xff1d88f2);
       border = Colors.blue;
-    } else if (condition == enumToString(WeatherCondition.snowy) ||
-        condition == enumToString(WeatherCondition.foggy)) {
-      main = Color(0xffefeeee);
-      gradient1 = Color(0xffffffff);
-      shade1 = Color(0xffcbcaca);
-      shade2 = Color(0xffffffff);
-      gradient2 = Color(0xffd7d6d6);
-      border = Colors.white;
     } else if (condition == enumToString(WeatherCondition.sunny)) {
       main = Color(0xfffdd835);
       gradient1 = Color(0xffffe739);
@@ -48,5 +40,13 @@ class MyTheme {
       gradient2 = gradient2.withBlue(200);
       border = Colors.blueAccent;
     }
+//    }
+//    else  {
+//      main = Color(0xffefeeee);
+//      gradient1 = Color(0xffffffff);
+//      shade1 = Color(0xffcbcaca);
+//      shade2 = Color(0xffffffff);
+//      gradient2 = Color(0xffd7d6d6);
+//    }
   }
 }

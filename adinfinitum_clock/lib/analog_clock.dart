@@ -125,9 +125,9 @@ class _AnalogClockState extends State<AnalogClock>
         .brightness == Brightness.light
         ? Theme.of(context).copyWith(
       // Hour hand.
-      primaryColor: Color(0xFF4285F4),
+      primaryColor: Colors.white,
       // Minute hand.
-      highlightColor: Color(0xFF8AB4F8),
+      highlightColor: Colors.pink,
       // Second hand.
       accentColor: Color(0xFF669DF6),
       backgroundColor: Color(0xFFD2E3FC),
@@ -223,7 +223,7 @@ class _AnalogClockState extends State<AnalogClock>
                               left: 20,
                               child: Container(
                                   color: Colors.green,
-                                  child: Text('timestimes'.substring(0, 4))))
+                                  child: Text(_now.toIso8601String())))
                         ]),
                       ),
                     ),
@@ -233,7 +233,7 @@ class _AnalogClockState extends State<AnalogClock>
                           .of(context)
                           .size
                           .width / 2 - 250 / 2 - 50,
-                      child: Face(theme: theme, seconds: _now.second,),
+                      child: Face(theme: theme, animation: animation,),
                     ),
                   ],
                 ),
