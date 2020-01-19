@@ -4,12 +4,15 @@
 
 import 'dart:async';
 
+import 'package:analog_clock/Clocktext.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:intl/intl.dart';
 import 'package:vector_math/vector_math_64.dart' show radians;
 
+import 'AppColor.dart';
+import 'clock_face.dart';
 import 'container_hand.dart';
 import 'drawn_hand.dart';
 
@@ -32,13 +35,15 @@ class AnalogClock extends StatefulWidget {
   _AnalogClockState createState() => _AnalogClockState();
 }
 
-class _AnalogClockState extends State<AnalogClock> {
+class _AnalogClockState extends State<AnalogClock>
+    with TickerProviderStateMixin {
   var _now = DateTime.now();
   var _temperature = '';
   var _temperatureRange = '';
   var _condition = '';
   var _location = '';
-  Timer _timer;
+  AnimationController animationController;
+  Animation animation;
 
   @override
   void initState() {
@@ -47,6 +52,27 @@ class _AnalogClockState extends State<AnalogClock> {
     // Set the initial values.
     _updateTime();
     _updateModel();
+
+
+    animationController =
+        AnimationController(duration: Duration(seconds: 1), vsync: this);
+    animation =
+        CurvedAnimation(parent: animationController, curve: Curves.easeInOut);
+
+    animation = Tween<double>(begin: 45, end: 135).animate(animation);
+    animationController
+      ..addListener(() {
+        _updateTime();
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          animationController.reverse();
+        }
+        if (status == AnimationStatus.dismissed) {
+          animationController.forward();
+        }
+      });
+    animationController.forward();
   }
 
   @override
@@ -60,8 +86,7 @@ class _AnalogClockState extends State<AnalogClock> {
 
   @override
   void dispose() {
-    _timer?.cancel();
-    widget.model.removeListener(_updateModel);
+//    widget.model.removeListener(_updateModel);
     super.dispose();
   }
 
@@ -79,15 +104,14 @@ class _AnalogClockState extends State<AnalogClock> {
       _now = DateTime.now();
       // Update once per second. Make sure to do it at the beginning of each
       // new second, so that the clock is accurate.
-      _timer = Timer(
-        Duration(seconds: 1) - Duration(milliseconds: _now.millisecond),
-        _updateTime,
-      );
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    MyTheme theme = MyTheme(_condition);
+
     // There are many ways to apply themes to your clock. Some are:
     //  - Inherit the parent Theme (see ClockCustomizer in the
     //    flutter_clock_helper package).
@@ -95,22 +119,24 @@ class _AnalogClockState extends State<AnalogClock> {
     //  - Create your own [ThemeData], demonstrated in [AnalogClock].
     //  - Create a map of [Color]s to custom keys, demonstrated in
     //    [DigitalClock].
-    final customTheme = Theme.of(context).brightness == Brightness.light
+    final customTheme = Theme
+        .of(context)
+        .brightness == Brightness.light
         ? Theme.of(context).copyWith(
-            // Hour hand.
-            primaryColor: Color(0xFF4285F4),
-            // Minute hand.
-            highlightColor: Color(0xFF8AB4F8),
-            // Second hand.
-            accentColor: Color(0xFF669DF6),
-            backgroundColor: Color(0xFFD2E3FC),
-          )
+      // Hour hand.
+      primaryColor: Color(0xFF4285F4),
+      // Minute hand.
+      highlightColor: Color(0xFF8AB4F8),
+      // Second hand.
+      accentColor: Color(0xFF669DF6),
+      backgroundColor: Color(0xFFD2E3FC),
+    )
         : Theme.of(context).copyWith(
-            primaryColor: Color(0xFFD2E3FC),
-            highlightColor: Color(0xFF4285F4),
-            accentColor: Color(0xFF8AB4F8),
-            backgroundColor: Color(0xFF3C4043),
-          );
+      primaryColor: Color(0xFFD2E3FC),
+      highlightColor: Color(0xFF4285F4),
+      accentColor: Color(0xFF8AB4F8),
+      backgroundColor: Color(0xFF3C4043),
+    );
 
     final time = DateFormat.Hms().format(DateTime.now());
     final weatherInfo = DefaultTextStyle(
@@ -127,55 +153,92 @@ class _AnalogClockState extends State<AnalogClock> {
     );
 
     return Semantics.fromProperties(
-      properties: SemanticsProperties(
-        label: 'Analog clock with time $time',
-        value: time,
-      ),
-      child: Container(
-        color: customTheme.backgroundColor,
-        child: Stack(
-          children: [
-            // Example of a hand drawn with [CustomPainter].
-            DrawnHand(
-              color: customTheme.accentColor,
-              thickness: 4,
-              size: 1,
-              angleRadians: _now.second * radiansPerTick,
-            ),
-            DrawnHand(
-              color: customTheme.highlightColor,
-              thickness: 16,
-              size: 0.9,
-              angleRadians: _now.minute * radiansPerTick,
-            ),
-            // Example of a hand drawn with [Container].
-            ContainerHand(
-              color: Colors.transparent,
-              size: 0.5,
-              angleRadians: _now.hour * radiansPerHour +
-                  (_now.minute / 60) * radiansPerHour,
-              child: Transform.translate(
-                offset: Offset(0.0, -60.0),
-                child: Container(
-                  width: 32,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: customTheme.primaryColor,
-                  ),
+        properties: SemanticsProperties(
+          label: 'Analog clock with time $time',
+          value: time,
+        ),
+        child: Scaffold(
+          backgroundColor: theme.main,
+          body: Center(
+            child: AspectRatio(
+              aspectRatio: 5 / 3,
+              child: Center(
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      top: 250,
+                      left: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 2 - 160,
+                      child: Container(
+                        height: 200,
+                        width: 200,
+                        color: theme.main,
+                        child: Stack(children: [
+                          Positioned(
+                            left: 100,
+                            child: Container(
+//                            color: Colors.green,
+                              child: Transform(
+                                alignment: FractionalOffset.centerLeft,
+                                transform: new Matrix4.rotationZ(
+                                    (animation.value) * 3.14 / 180),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      width: 70,
+                                      height: 15,
+                                      child: LinearProgressIndicator(
+                                        backgroundColor: Color(0xffefeeee),
+                                        value: _now.second.truncateToDouble() /
+                                            100,
+                                        valueColor: AlwaysStoppedAnimation<
+                                            Color>(
+                                          Colors.amber,
+                                        ),
+                                      ),
+                                    ),
+                                    RotatedBox(
+                                        quarterTurns: 3,
+                                        child: Text(
+                                          animationController.status ==
+                                              AnimationStatus.forward
+                                              ? 'tok'
+                                              : 'tik',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.w200),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                              top: 76,
+                              left: 20,
+                              child: Container(
+                                  color: Colors.green,
+                                  child: Text('timestimes'.substring(0, 4))))
+                        ]),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      left: MediaQuery
+                          .of(context)
+                          .size
+                          .width / 2 - 250 / 2 - 50,
+                      child: Face(theme: theme, seconds: _now.second,),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Positioned(
-              left: 0,
-              bottom: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: weatherInfo,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 }

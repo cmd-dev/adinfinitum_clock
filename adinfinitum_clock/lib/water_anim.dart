@@ -1,5 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
+import 'dart:math' as Math;
+
+import 'AppColor.dart';
+import 'Clocktext.dart';
+import 'drawn_hand.dart';
 
 void main() => runApp(MyApp());
 /*
@@ -33,22 +39,36 @@ class MyPainter extends CustomPainter {
 class Water extends CustomPainter {
   Animation animation;
 
-  Water(this.animation) : super(repaint: animation);
+  Water(this.animation) :super(repaint: animation);
 
   void paint(Canvas canvas, Size size) {
+    final radius = size.width / 2;
+
     canvas.translate(size.width / 2, size.height / 2);
     canvas.scale(1, -1);
     final rect2 = Rect.fromLTWH(-100, -50, 200, 100);
-    canvas.drawRect(rect2, Paint());
+//    canvas.drawRect(rect2, Paint());
     canvas.scale(1, -1);
     final rect = Rect.fromLTRB(50, 100, 250, 200);
     final startAngle = 0.0;
-    final sweepAngle = math.pi;
+    final sweepAngle = Math.pi;
     final useCenter = false;
     final paint = Paint()
       ..color = Colors.green
       ..style = PaintingStyle.fill
       ..strokeWidth = 4;
+    canvas.scale(1, -1);
+
+    canvas.drawArc(Rect.fromCenter(center: Offset(0, 0),
+        width: 120 + animation.value * size.width,
+        height: 400 - sin(animation.value) * 360), Math.pi / 4, Math.pi / 2,
+        false, paint);
+    canvas.drawArc(Rect.fromCenter(center: Offset(-radius, 0),
+        width: 120 + animation.value * 400,
+        height: 400 + cos(animation.value) * 360), Math.pi / 4, Math.pi / 2,
+        false, paint);
+    canvas.scale(1, -1);
+
     canvas.drawArc(
         rect2,
         3.1415,
@@ -63,13 +83,16 @@ class Water extends CustomPainter {
         startAngle,
         sweepAngle,
         !useCenter,
-        paint);
+        paint..color = Colors.transparent);
   }
 
   bool shouldRepaint(Water other) {
     return other.animation.value != animation.value;
   }
 }
+
+//Text('pm',style: TextStyle(fontSize: 40),)
+
 
 class Pai extends CustomPainter {
   @override
@@ -85,6 +108,9 @@ class Pai extends CustomPainter {
     canvas.translate(size.width / 2, size.height / 2);
     canvas.scale(1, -1);
     canvas.drawLine(Offset(90, 0), Offset(100, 0), mpaint);
+    Path path = Path();
+    path.quadraticBezierTo(radius / 2, size.height / 2, radius, size.height);
+    //    canvas.drawPath(, mpaint);
     for (var i = 0; i < 60; i++) {
       canvas.rotate(angle);
 
@@ -133,10 +159,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       duration: Duration(seconds: 1),
     )
       ..addListener(() {
-        setState(() {
-
-
-        });
+        setState(() {});
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) animationController.reverse();
@@ -159,7 +182,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 return CustomPaint(
                   foregroundPainter: Water(animationController),
                   painter: Pai(),
-                  child: Center(),);
+                  child: Center(),
+                );
               })),
       floatingActionButton: FloatingActionButton(
         onPressed: null,

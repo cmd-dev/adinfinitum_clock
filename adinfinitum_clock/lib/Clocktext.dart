@@ -15,7 +15,7 @@ class ClockText extends StatelessWidget {
           cos(angleAdd + 270 * 3.14 / 180), sin(angleAdd + 270 * 3.14 / 180)),
       child: Text(
         num.toString(),
-        style: TextStyle(fontSize: 14, color: Colors.red),
+        style: TextStyle(fontSize: 14, color: Colors.black),
       ),
     );
   }

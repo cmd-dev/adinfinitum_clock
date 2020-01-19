@@ -1,5 +1,6 @@
 import 'package:analog_clock/AppColor.dart';
 import 'package:analog_clock/Clocktext.dart';
+import 'package:analog_clock/clock_face.dart';
 import 'package:analog_clock/container_hand.dart';
 import 'package:analog_clock/drawn_hand.dart';
 import 'package:flutter/material.dart';
@@ -87,7 +88,6 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   Widget build(BuildContext context) {
-    MyTheme theme = MyTheme();
 
     return Scaffold(
         backgroundColor: theme.main,
@@ -162,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage>
                         .of(context)
                         .size
                         .width / 2 - 250 / 2 - 50,
-                    child: ClockCard(seconds: sec),
+                    child: Face(),
                   ),
                 ],
               ),
@@ -171,95 +171,3 @@ class _MyHomePageState extends State<MyHomePage>
         ));
   }
 }
-
-class ClockCard extends StatelessWidget {
-  ClockCard({
-    Key key,
-    @required int seconds,
-  })
-      : _seconds = seconds,
-        super(key: key);
-  int _seconds;
-  double sunny;
-  double rainy;
-  double snowy;
-
-  List<Color> defaultSet = [];
-
-//  List<Color> sunColors=[];
-
-  String loc;
-
-  @override
-  Widget build(BuildContext context) {
-    MyTheme theme = MyTheme();
-
-//    x.addListener(()=>
-//
-//        loc=x.location
-//
-//    );
-
-    return Container(
-      decoration: BoxDecoration(
-//                    gradient: LinearGradient(
-//                      begin: Alignment.topLeft,
-//                      end: Alignment.bottomRight,
-//                      colors: [Color(0xFFffffff), Color(0xFFd7d6d6)]
-
-//                    ),
-//                    borderRadius: BorderRadius.circular(250 / 2),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(offset: Offset(6, 6), color: theme.shade1, blurRadius: 12),
-          BoxShadow(
-              offset: Offset(-6, -6), color: theme.shade2, blurRadius: 12),
-        ],
-      ),
-      margin: EdgeInsets.only(top: 30),
-      height: 230,
-      width: 230,
-      child: Card(
-        color: theme.main,
-        child: Container(
-          height: 230,
-          width: 230,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  theme.gradient1.withOpacity(0.5),
-                  theme.gradient2.withOpacity(0.5),
-                ]),
-          ),
-          child: Center(
-            child: Stack(
-              children: <Widget>[
-                ClockText(),
-                DrawnHand(color: Colors.cyan,
-                  size: 0.5,
-                  angleRadians: _seconds.truncateToDouble() * 0.10472 / 3600,
-                  thickness: 7,),
-                DrawnHand(color: Colors.orange,
-                  size: 0.7,
-                  angleRadians: _seconds.truncateToDouble() * 0.10472 / 60,
-                  thickness: 7,),
-                DrawnHand(
-                  color: Colors.green,
-                  size: _seconds * 6 % 30 == 0 ? 0.8 : 1.0,
-                  angleRadians: _seconds.truncateToDouble() * 0.10472,
-                  thickness: 8,
-                ),
-              ],
-            ),
-          ),
-        ),
-        shape: CircleBorder(
-            side: BorderSide(width: 1, color: theme.border.withOpacity(0.2))),
-      ),
-    );
-  }
-}
-//Text('pm',style: TextStyle(fontSize: 40),)
