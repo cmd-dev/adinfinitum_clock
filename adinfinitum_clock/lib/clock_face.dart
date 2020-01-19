@@ -89,7 +89,7 @@ class Lines extends CustomPainter {
   }
 }
 
-class ClockCard extends StatelessWidget {
+class ClockCard extends StatefulWidget {
   ClockCard({
     Key key, this.theme,
     this.current,
@@ -98,9 +98,12 @@ class ClockCard extends StatelessWidget {
   DateTime current;
   MyTheme theme;
 
-  List<Color> defaultSet = [];
+  @override
+  _ClockCardState createState() => _ClockCardState();
+}
 
-//  List<Color> sunColors=[];
+class _ClockCardState extends State<ClockCard> {
+  List<Color> defaultSet = [];
 
   String loc;
 
@@ -110,18 +113,18 @@ class ClockCard extends StatelessWidget {
     double x = -6 * cos(z);
     double y = -6 * sin(z);
 
-    print(current.hour);
-    print(current.minute);
-    print(current.second);
     return Container(
       decoration: BoxDecoration(
 
         shape: BoxShape.circle,
 
         boxShadow: [
-          BoxShadow(offset: Offset(x, y), color: theme.shade1, blurRadius: 12,),
           BoxShadow(
-              offset: Offset(-x, -y), color: theme.shade2, blurRadius: 12),
+            offset: Offset(x, y), color: widget.theme.shade1, blurRadius: 12,),
+          BoxShadow(
+              offset: Offset(-x, -y),
+              color: widget.theme.shade2,
+              blurRadius: 12),
         ],
       ),
       margin: EdgeInsets.only(top: 30),
@@ -131,7 +134,7 @@ class ClockCard extends StatelessWidget {
         children: <Widget>[
 
           Card(
-            color: theme.main,
+            color: widget.theme.main,
             child: Container(
               height: 230,
               width: 230,
@@ -141,8 +144,8 @@ class ClockCard extends StatelessWidget {
                     begin: Alignment(-x / 6, -y / 6),
                     end: Alignment(x / 6, y / 6),
                     colors: [
-                      theme.gradient1.withOpacity(0.5),
-                      theme.gradient2.withOpacity(0.5),
+                      widget.theme.gradient1.withOpacity(0.5),
+                      widget.theme.gradient2.withOpacity(0.5),
                     ]),
               ),
               child: Center(
@@ -160,19 +163,19 @@ class ClockCard extends StatelessWidget {
                             .of(context)
                             .primaryColor,
                         size: 0.5,
-                        angleRadians: current.hour % 12 * 2 * 3.14 / 12,
+                        angleRadians: widget.current.hour % 12 * 2 * 3.14 / 12,
                         thickness: 7
                     ),
                     DrawnHand(
                       color: Colors.orange,
                       size: 0.7,
-                      angleRadians: current.minute * 2 * 3.14 / 60,
+                      angleRadians: widget.current.minute * 2 * 3.14 / 60,
                       thickness: 5,
                     ),
                     DrawnHand(
                       color: Colors.green,
-                      size: current.second * 6 % 30 == 0 ? 0.7 : 1.0,
-                      angleRadians: current.second * 2 * 3.1415 / 60,
+                      size: widget.current.second * 6 % 30 == 0 ? 0.7 : 1.0,
+                      angleRadians: widget.current.second * 2 * 3.1415 / 60,
                       thickness: 1,
                     ),
                   ],
@@ -181,8 +184,18 @@ class ClockCard extends StatelessWidget {
             ),
             shape: CircleBorder(
                 side: BorderSide(
-                    width: 1, color: theme.border.withOpacity(0.2))),
+                    width: 1, color: widget.theme.border.withOpacity(0.2))),
           ),
+
+          Container(
+
+              alignment: Alignment(-x / 2.5, -y / 3.5),
+//              height: 50,
+//              width: 50,
+              child: IconButton(
+                iconSize: 45 + y,
+                icon: Icon(Icons.wb_sunny, color: Colors.amber[700],),
+                onPressed: null,)),
 
 
         ],
