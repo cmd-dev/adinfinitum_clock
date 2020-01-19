@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:analog_clock/Clocktext.dart';
+import 'package:analog_clock/sun_position.dart';
 import 'package:flutter/material.dart';
 
 import 'AppColor.dart';
 import 'drawn_hand.dart';
-
+import 'analog_clock.dart';
 class Face extends StatefulWidget {
   Face({Key key, this.title, this.theme, this.seconds}) : super(key: key);
   MyTheme theme;
@@ -127,6 +130,9 @@ class ClockCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double z = -getSunPositionAsAngle(DateTime.now());
+    double x = -6 * cos(z);
+    double y = -6 * sin(z);
 //    x.addListener(()=>
 //
 //        loc=x.location
@@ -143,10 +149,11 @@ class ClockCard extends StatelessWidget {
 //                    ),
 //                    borderRadius: BorderRadius.circular(250 / 2),
         shape: BoxShape.circle,
+
         boxShadow: [
-          BoxShadow(offset: Offset(6, 6), color: theme.shade1, blurRadius: 12),
+          BoxShadow(offset: Offset(x, y), color: theme.shade1, blurRadius: 12,),
           BoxShadow(
-              offset: Offset(-6, -6), color: theme.shade2, blurRadius: 12),
+              offset: Offset(-x, -y), color: theme.shade2, blurRadius: 12),
         ],
       ),
       margin: EdgeInsets.only(top: 30),
@@ -160,8 +167,8 @@ class ClockCard extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+                begin: Alignment(-x / 6, -y / 6),
+                end: Alignment(x / 6, y / 6),
                 colors: [
                   theme.gradient1.withOpacity(0.5),
                   theme.gradient2.withOpacity(0.5),

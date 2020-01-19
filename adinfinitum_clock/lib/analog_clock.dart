@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:analog_clock/Clocktext.dart';
+import 'package:analog_clock/sun_position.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -52,7 +53,7 @@ class _AnalogClockState extends State<AnalogClock>
     // Set the initial values.
     _updateTime();
     _updateModel();
-
+    getSunPositionAsAngle(_now);
 
     animationController =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
