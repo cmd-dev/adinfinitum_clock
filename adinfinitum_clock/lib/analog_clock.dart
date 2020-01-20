@@ -4,6 +4,10 @@
 
 
 import 'package:analog_clock/sun_position.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +65,7 @@ class _AnalogClockState extends State<AnalogClock>
     );
 
     getSunPositionAsAngle(_now);
-    iconanimationController = AnimationController(vsync: this, upperBound: 313)
+    iconanimationController = AnimationController(vsync: this, upperBound: 325)
       ..addListener(() {
         setState(() {});
       });
@@ -161,9 +165,10 @@ class _AnalogClockState extends State<AnalogClock>
     final weatherInfo = DefaultTextStyle(
       style: TextStyle(color: customTheme.primaryColor),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               widget.model.temperatureString.substring(3, 6) == '°F'
                   ? double.parse(_temperature.substring(0, 4)) > 82.4
@@ -172,20 +177,43 @@ class _AnalogClockState extends State<AnalogClock>
                   : double.parse(_temperature.substring(0, 4)) > 28
                   ? Icon(Icons.whatshot)
                   : Icon(Icons.toys),
-              Text(_temperature),
+              Text('  $_temperature', style: TextStyle(fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w200,
+                  color: Theme
+                      .of(context)
+                      .primaryColor),),
             ],
-          ),
-          Row(
+          ), Container(height: 5,),
+
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Icon(Icons.import_export),
-              Text(_temperatureRange),
+              Text('  $_temperatureRange', style: TextStyle(fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w200,
+                  color: Theme
+                      .of(context)
+                      .primaryColor),),
             ],
-          ),
-          Text('       $_condition'),
-          Row(
+          ), Container(height: 5,),
+
+          Text('         ${_condition.toUpperCase()}', style: TextStyle(
+              fontSize: 20,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w200,
+              color: Theme
+                  .of(context)
+                  .primaryColor),),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Icon(Icons.location_on),
-              Text(_location),
+              Text('  $_location', style: TextStyle(fontSize: 20,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w200,
+                  color: Theme
+                      .of(context)
+                      .primaryColor),),
             ],
           ),
         ],
