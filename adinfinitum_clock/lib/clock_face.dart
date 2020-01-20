@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'AppColor.dart';
 import 'drawn_hand.dart';
 import 'analog_clock.dart';
+
 class Face extends StatefulWidget {
   Face({Key key, this.theme, this.animation}) : super(key: key);
   MyTheme theme;
   Animation animation;
-
 
   @override
   _FaceState createState() => _FaceState();
@@ -19,7 +19,6 @@ class Face extends StatefulWidget {
 
 class _FaceState extends State<Face> with SingleTickerProviderStateMixin {
   DateTime _current = DateTime.now();
-
 
 //  void incrementCounter() {
 //    setState(() {
@@ -54,7 +53,10 @@ class _FaceState extends State<Face> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return CustomPaint(
       foregroundPainter: Lines(),
-      child: ClockCard(current: _current, theme: widget.theme,),
+      child: ClockCard(
+        current: _current,
+        theme: widget.theme,
+      ),
     );
   }
 }
@@ -71,7 +73,6 @@ class Lines extends CustomPainter {
     canvas.translate(size.width / 2 + 0.25, size.height / 2 + 15.5);
 
     canvas.scale(1, -1);
-
 
     for (var i = 0; i < 60; i++) {
       double ticksize = i % 5 == 0 ? radius - 22 : radius - 15;
@@ -91,10 +92,10 @@ class Lines extends CustomPainter {
 
 class ClockCard extends StatefulWidget {
   ClockCard({
-    Key key, this.theme,
+    Key key,
+    this.theme,
     this.current,
-  })
-      :super(key: key);
+  }) : super(key: key);
   DateTime current;
   MyTheme theme;
 
@@ -115,12 +116,13 @@ class _ClockCardState extends State<ClockCard> {
 
     return Container(
       decoration: BoxDecoration(
-
         shape: BoxShape.circle,
-
         boxShadow: [
           BoxShadow(
-            offset: Offset(x, y), color: widget.theme.shade1, blurRadius: 12,),
+            offset: Offset(x, y),
+            color: widget.theme.shade1,
+            blurRadius: 12,
+          ),
           BoxShadow(
               offset: Offset(-x, -y),
               color: widget.theme.shade2,
@@ -132,7 +134,6 @@ class _ClockCardState extends State<ClockCard> {
       width: 230,
       child: Stack(
         children: <Widget>[
-
           Card(
             color: widget.theme.main,
             child: Container(
@@ -164,8 +165,7 @@ class _ClockCardState extends State<ClockCard> {
                             .primaryColor,
                         size: 0.5,
                         angleRadians: widget.current.hour % 12 * 2 * 3.14 / 12,
-                        thickness: 7
-                    ),
+                        thickness: 7),
                     DrawnHand(
                       color: Colors.orange,
                       size: 0.7,
@@ -186,21 +186,32 @@ class _ClockCardState extends State<ClockCard> {
                 side: BorderSide(
                     width: 1, color: widget.theme.border.withOpacity(0.2))),
           ),
-
           Container(
-
               alignment: Alignment(-x / 2.5, -y / 3.5),
 //              height: 50,
 //              width: 50,
               child: IconButton(
                 iconSize: 45 + y,
-                icon: Icon(Icons.wb_sunny, color: Colors.amber[700],),
-                onPressed: null,)),
-
-
+                icon: Icon(
+                  Icons.wb_sunny,
+                  color: Colors.amber[700],
+                ),
+                onPressed: null,
+              )),
+          Container(
+              alignment: Alignment(-x / 2.5, -y / 3.5),
+//              height: 50,
+//              width: 50,
+              child: IconButton(
+                iconSize: 45 + y,
+                icon: Icon(
+                  Icons.brightness_2,
+                  color: Colors.grey[700],
+                ),
+                onPressed: null,
+              )),
         ],
       ),
     );
   }
 }
-

@@ -2,12 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 
 class MyTheme {
-  Color main = Color(0xff9e9e9e);
-  Color gradient1 = Color(0xffa9a9a9);
-  Color shade1 = Color(0xff868686);
-  Color shade2 = Color(0xffb6b6b6);
-  Color gradient2 = Color(0xff8e8e8e);
+  Color main = Color(0xffefeeee);
+  Color gradient1 = Color(0xffffffff);
+  Color shade1 = Color(0xffcbcaca);
+  Color shade2 = Color(0xffffffff);
+  Color gradient2 = Color(0xffd7d6d6);
   Color border = Colors.grey;
+
+//  Icon(Icons.location_on)
+//  Icon(Icons.wb_cloudy)
+//  Icon(Icons.flash_on)
+//  Icon(Icons.ac_unit)
+//  Icon(Icons.grain)
+//  Icon(Icons.)
+//  Icon(Icons.lo)
+
+
+
+
   ClockModel x = new ClockModel();
   String condition;
 
@@ -15,6 +27,7 @@ class MyTheme {
     condition = weathcondition;
     getWeather();
   }
+
 
   getWeather() {
     if (condition == enumToString(WeatherCondition.rainy) ||
@@ -40,13 +53,13 @@ class MyTheme {
       gradient2 = gradient2.withBlue(200);
       border = Colors.blueAccent;
     }
-//    }
-//    else  {
-//      main = Color(0xffefeeee);
-//      gradient1 = Color(0xffffffff);
-//      shade1 = Color(0xffcbcaca);
-//      shade2 = Color(0xffffffff);
-//      gradient2 = Color(0xffd7d6d6);
-//    }
+    else if (condition == Brightness.dark.toString()) {
+      main = Color(0xff9e9e9e);
+      gradient1 = Color(0xffa9a9a9);
+      shade1 = Color(0xff868686);
+      shade2 = Color(0xffb6b6b6);
+      gradient2 = Color(0xff8e8e8e);
+      border = Colors.grey;
+    }
   }
 }

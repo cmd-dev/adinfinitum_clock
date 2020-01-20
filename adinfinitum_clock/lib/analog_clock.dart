@@ -112,7 +112,10 @@ class _AnalogClockState extends State<AnalogClock>
   @override
   Widget build(BuildContext context) {
     MyTheme theme = MyTheme(_condition);
-
+    if (Theme
+        .of(context)
+        .brightness == Brightness.dark)
+      theme = MyTheme(Brightness.dark.toString());
     // There are many ways to apply themes to your clock. Some are:
     //  - Inherit the parent Theme (see ClockCustomizer in the
     //    flutter_clock_helper package).
@@ -145,10 +148,26 @@ class _AnalogClockState extends State<AnalogClock>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_temperature),
-          Text(_temperatureRange),
-          Text(_condition),
-          Text(_location),
+          Row(
+            children: <Widget>[
+              Icon(Icons.location_on), Text(_temperature),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Icon(Icons.location_on), Text(_temperatureRange),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Icon(Icons.location_on), Text(_condition),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Icon(Icons.location_on), Text(_location),
+            ],
+          ),
         ],
       ),
     );
@@ -177,6 +196,7 @@ class _AnalogClockState extends State<AnalogClock>
                         width: 200,
                         color: theme.main,
                         child: Stack(children: [
+
                           Positioned(
                             left: 100,
                             child: Container(
@@ -235,6 +255,10 @@ class _AnalogClockState extends State<AnalogClock>
                           .width / 2 - 250 / 2 - 50,
                       child: Face(theme: theme, animation: animation,),
                     ),
+                    Positioned(
+                        top: 270,
+                        left: 30,
+                        child: weatherInfo),
                   ],
                 ),
               ),
