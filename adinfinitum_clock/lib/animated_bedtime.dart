@@ -94,9 +94,15 @@ class _MyHomePageState extends State<MyHomePage>
       body: Center(
         child: AnimatedContainer(
           duration: Duration(seconds: 1),
-          child: Icon(
-            Icons.airline_seat_individual_suite,
-            size: height,
+          child: AnimatedSwitcher(
+            duration: Duration(seconds: 1),
+            child: IconButton(
+              onPressed: null,
+              icon: isLaunch ? Icon(
+                Icons.airline_seat_individual_suite,
+                size: height,
+              ) : Text('h'),
+            ),
           ),
           height: height,
           width: height,
