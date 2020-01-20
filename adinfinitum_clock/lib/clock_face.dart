@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 
 import 'AppColor.dart';
 import 'drawn_hand.dart';
-import 'analog_clock.dart';
 
 class Face extends StatefulWidget {
   Face({Key key, this.theme, this.animation}) : super(key: key);
-  MyTheme theme;
-  Animation animation;
+  final MyTheme theme;
+  final Animation animation;
 
   @override
   _FaceState createState() => _FaceState();
@@ -96,8 +95,8 @@ class ClockCard extends StatefulWidget {
     this.theme,
     this.current,
   }) : super(key: key);
-  DateTime current;
-  MyTheme theme;
+  final DateTime current;
+  final MyTheme theme;
 
   @override
   _ClockCardState createState() => _ClockCardState();
@@ -110,13 +109,13 @@ class _ClockCardState extends State<ClockCard> {
   double y;
   String loc;
   bool isDay = true;
+
   @override
   Widget build(BuildContext context) {
-    widget.current = widget.current.subtract(Duration(hours: 12));
-    DateTime dayttimeStart = DateTime(
-        2020, widget.current.month, widget.current.day, 7, 15);
-    DateTime dayttimeEnd = DateTime(
-        2020, widget.current.month, widget.current.day, 17, 30);
+    DateTime dayttimeStart =
+    DateTime(2020, widget.current.month, widget.current.day, 7, 15);
+    DateTime dayttimeEnd =
+    DateTime(2020, widget.current.month, widget.current.day, 17, 30);
     if (widget.current.isAfter(dayttimeStart) &&
         widget.current.isBefore(dayttimeEnd)) {
       isDay = true;
@@ -124,8 +123,7 @@ class _ClockCardState extends State<ClockCard> {
 
       x = -6 * cos(z);
       y = -6 * sin(z);
-    }
-    else {
+    } else {
       isDay = false;
       z = -getMoonPositionAsAngle(widget.current);
 
@@ -182,7 +180,7 @@ class _ClockCardState extends State<ClockCard> {
                             .of(context)
                             .primaryColor,
                         size: 0.5,
-                        angleRadians: widget.current.hour % 12 * 2 * 3.14 / 12,
+                        angleRadians: widget.current.hour * 2 * 3.14 / 12,
                         thickness: 7),
                     DrawnHand(
                       color: Colors.orange,
@@ -210,13 +208,10 @@ class _ClockCardState extends State<ClockCard> {
 //              width: 50,
               child: IconButton(
                 iconSize: 45 + y,
-                icon: Icon(
-                    isDay ? Icons.wb_sunny : Icons.brightness_2,
-                    color: isDay ? Colors.amber[700] : Colors.grey
-                ),
+                icon: Icon(isDay ? Icons.wb_sunny : Icons.brightness_2,
+                    color: isDay ? Colors.amber[700] : Colors.grey),
                 onPressed: null,
               )),
-
         ],
       ),
     );

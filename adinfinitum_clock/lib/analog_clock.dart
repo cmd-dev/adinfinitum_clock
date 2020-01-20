@@ -2,9 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
 
-import 'package:analog_clock/Clocktext.dart';
 import 'package:analog_clock/sun_position.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter_clock_helper/model.dart';
@@ -12,11 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:intl/intl.dart';
 import 'package:vector_math/vector_math_64.dart' show radians;
-import 'particles.dart';
 import 'AppColor.dart';
 import 'clock_face.dart';
-import 'container_hand.dart';
-import 'drawn_hand.dart';
 
 /// Total distance traveled by a second or a minute hand, each second or minute,
 /// respectively.
@@ -48,6 +43,7 @@ class _AnalogClockState extends State<AnalogClock>
   AnimationController iconanimationController;
   Animation animation;
   GravitySimulation simulation;
+  int _counter = 0;
 
   @override
   void initState() {
@@ -82,9 +78,13 @@ class _AnalogClockState extends State<AnalogClock>
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           animationController.reverse();
+          _counter++;
+          if (_counter / 100 == 1) _counter = 0;
         }
         if (status == AnimationStatus.dismissed) {
           animationController.forward();
+          _counter++;
+          if (_counter / 100 == 1) _counter = 0;
         }
       });
     iconanimationController.animateWith(simulation);
@@ -166,14 +166,12 @@ class _AnalogClockState extends State<AnalogClock>
           Row(
             children: <Widget>[
               widget.model.temperatureString.substring(3, 6) == '°F'
-                  ?
-              double.parse(_temperature.substring(0, 4)) > 82.4 ?
-              Icon(Icons.whatshot) : Icon(Icons.toys) : double.parse(
-                  _temperature.substring(0, 4)) > 28 ?
-              Icon(Icons.whatshot) : Icon(Icons.toys),
-
-
-
+                  ? double.parse(_temperature.substring(0, 4)) > 82.4
+                  ? Icon(Icons.whatshot)
+                  : Icon(Icons.toys)
+                  : double.parse(_temperature.substring(0, 4)) > 28
+                  ? Icon(Icons.whatshot)
+                  : Icon(Icons.toys),
               Text(_temperature),
             ],
           ),
@@ -235,8 +233,8 @@ class _AnalogClockState extends State<AnalogClock>
                                       height: 15,
                                       child: LinearProgressIndicator(
                                         backgroundColor: Color(0xffefeeee),
-                                        value: _now.second.truncateToDouble() /
-                                            100,
+                                        value:
+                                        _counter.truncateToDouble() / 100,
                                         valueColor:
                                         AlwaysStoppedAnimation<Color>(
                                           Colors.amber,

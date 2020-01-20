@@ -20,7 +20,7 @@ class ClockText extends StatelessWidget {
     );
   }
 
-  static List<Widget> GetList() {
+  static List<Widget> getList() {
     List<Widget> x = [];
     for (int i = 1; i <= 12; i++) {
       x.add(numText(i));
@@ -31,7 +31,7 @@ class ClockText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: GetList(),
+      children: getList(),
     );
   }
 }

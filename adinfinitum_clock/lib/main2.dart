@@ -1,12 +1,7 @@
-import 'package:analog_clock/AppColor.dart';
-import 'package:analog_clock/Clocktext.dart';
 import 'package:analog_clock/clock_face.dart';
-import 'package:analog_clock/container_hand.dart';
-import 'package:analog_clock/drawn_hand.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_clock_helper/model.dart';
 
 void main() {
   runApp(MyApp());
@@ -78,12 +73,6 @@ class _MyHomePageState extends State<MyHomePage>
       incrementCounter();
     });
     animationController.forward();
-
-//     animationController.addStatusListener((AnimationStatus)
-//                                           {
-//     if(animationController.status==)
-//       animationController.reverse();}
-//     );
   }
 
   @override

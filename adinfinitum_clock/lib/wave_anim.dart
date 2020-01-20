@@ -75,7 +75,6 @@ class TestPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final height = size.height / 2;
-    final width = size.width / 2;
 
     canvas.translate(0, height);
 //    canvas.scale(1, -1);
