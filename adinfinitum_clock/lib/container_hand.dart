@@ -41,10 +41,8 @@ class ContainerHand extends Hand {
           child: Transform.scale(
             scale: size,
             alignment: Alignment.center,
-            child: Container(
-              color: color,
-              child: Center(child: child),
-            ),
+            child: Center(child: child),
+
           ),
         ),
       ),

@@ -112,7 +112,7 @@ class _ClockCardState extends State<ClockCard> {
   bool isDay = true;
   @override
   Widget build(BuildContext context) {
-    widget.current = widget.current.subtract(Duration(hours: 1));
+    widget.current = widget.current.subtract(Duration(hours: 12));
     DateTime dayttimeStart = DateTime(
         2020, widget.current.month, widget.current.day, 7, 15);
     DateTime dayttimeEnd = DateTime(
@@ -190,14 +190,12 @@ class _ClockCardState extends State<ClockCard> {
                       angleRadians: widget.current.minute * 2 * 3.14 / 60,
                       thickness: 5,
                     ),
-
-
-//                    DrawnHand(
-//                      color: Colors.green,
-//                      size: widget.current.second * 6 % 30 == 0 ? 0.7 : 1.0,
-//                      angleRadians: widget.current.second * 2 * 3.1415 / 60,
-//                      thickness: 1,
-//                    ),
+                    DrawnHand(
+                      color: Colors.green,
+                      size: widget.current.second * 6 % 30 == 0 ? 0.7 : 1.0,
+                      angleRadians: widget.current.second * 2 * 3.1415 / 60,
+                      thickness: 1,
+                    ),
                   ],
                 ),
               ),
@@ -214,7 +212,7 @@ class _ClockCardState extends State<ClockCard> {
                 iconSize: 45 + y,
                 icon: Icon(
                     isDay ? Icons.wb_sunny : Icons.brightness_2,
-                    color: isDay ? Colors.amber[700] : Colors.blueGrey
+                    color: isDay ? Colors.amber[700] : Colors.grey
                 ),
                 onPressed: null,
               )),
