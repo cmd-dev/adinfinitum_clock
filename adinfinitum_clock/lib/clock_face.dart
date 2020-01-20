@@ -105,15 +105,33 @@ class ClockCard extends StatefulWidget {
 
 class _ClockCardState extends State<ClockCard> {
   List<Color> defaultSet = [];
-
+  double z;
+  double x;
+  double y;
   String loc;
-
+  bool isDay = true;
   @override
   Widget build(BuildContext context) {
-    double z = -getSunPositionAsAngle(DateTime.now());
-    double x = -6 * cos(z);
-    double y = -6 * sin(z);
+    widget.current = widget.current.subtract(Duration(hours: 1));
+    DateTime dayttimeStart = DateTime(
+        2020, widget.current.month, widget.current.day, 7, 15);
+    DateTime dayttimeEnd = DateTime(
+        2020, widget.current.month, widget.current.day, 17, 30);
+    if (widget.current.isAfter(dayttimeStart) &&
+        widget.current.isBefore(dayttimeEnd)) {
+      isDay = true;
+      z = -getSunPositionAsAngle(widget.current);
 
+      x = -6 * cos(z);
+      y = -6 * sin(z);
+    }
+    else {
+      isDay = false;
+      z = -getMoonPositionAsAngle(widget.current);
+
+      x = -6 * cos(z);
+      y = -6 * sin(z);
+    }
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -172,12 +190,14 @@ class _ClockCardState extends State<ClockCard> {
                       angleRadians: widget.current.minute * 2 * 3.14 / 60,
                       thickness: 5,
                     ),
-                    DrawnHand(
-                      color: Colors.green,
-                      size: widget.current.second * 6 % 30 == 0 ? 0.7 : 1.0,
-                      angleRadians: widget.current.second * 2 * 3.1415 / 60,
-                      thickness: 1,
-                    ),
+
+
+//                    DrawnHand(
+//                      color: Colors.green,
+//                      size: widget.current.second * 6 % 30 == 0 ? 0.7 : 1.0,
+//                      angleRadians: widget.current.second * 2 * 3.1415 / 60,
+//                      thickness: 1,
+//                    ),
                   ],
                 ),
               ),
@@ -193,23 +213,12 @@ class _ClockCardState extends State<ClockCard> {
               child: IconButton(
                 iconSize: 45 + y,
                 icon: Icon(
-                  Icons.wb_sunny,
-                  color: Colors.amber[700],
+                    isDay ? Icons.wb_sunny : Icons.brightness_2,
+                    color: isDay ? Colors.amber[700] : Colors.blueGrey
                 ),
                 onPressed: null,
               )),
-          Container(
-              alignment: Alignment(-x / 2.5, -y / 3.5),
-//              height: 50,
-//              width: 50,
-              child: IconButton(
-                iconSize: 45 + y,
-                icon: Icon(
-                  Icons.brightness_2,
-                  color: Colors.grey[700],
-                ),
-                onPressed: null,
-              )),
+
         ],
       ),
     );

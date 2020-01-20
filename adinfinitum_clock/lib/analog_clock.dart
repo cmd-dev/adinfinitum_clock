@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:analog_clock/AccelerateCurve.dart';
 import 'package:analog_clock/Clocktext.dart';
 import 'package:analog_clock/sun_position.dart';
 import 'package:flutter/physics.dart';
@@ -47,11 +46,8 @@ class _AnalogClockState extends State<AnalogClock>
   var _location = '';
   AnimationController animationController;
   AnimationController iconanimationController;
-  AnimationController changeanimationController;
   Animation animation;
-  Animation changesimulation;
   GravitySimulation simulation;
-  bool isSunny = true;
 
   @override
   void initState() {
@@ -69,12 +65,7 @@ class _AnalogClockState extends State<AnalogClock>
     );
 
     getSunPositionAsAngle(_now);
-    iconanimationController = AnimationController(vsync: this, upperBound: 315)
-      ..addListener(() {
-        setState(() {});
-      });
-    changeanimationController = AnimationController(
-        vsync: this, upperBound: 315, duration: Duration(seconds: 5))
+    iconanimationController = AnimationController(vsync: this, upperBound: 313)
       ..addListener(() {
         setState(() {});
       });
@@ -82,11 +73,6 @@ class _AnalogClockState extends State<AnalogClock>
         AnimationController(duration: Duration(seconds: 1), vsync: this);
     animation =
         CurvedAnimation(parent: animationController, curve: Curves.easeInOut);
-    changesimulation =
-        CurvedAnimation(
-            parent: changeanimationController, curve: AccelerateCurve());
-    changesimulation =
-        Tween<double>(begin: 0.0, end: 900,).animate(changesimulation);
 
     animation = Tween<double>(begin: 45, end: 135).animate(animation);
     animationController
@@ -101,7 +87,6 @@ class _AnalogClockState extends State<AnalogClock>
           animationController.forward();
         }
       });
-    changeanimationController.forward();
     iconanimationController.animateWith(simulation);
     animationController.forward();
   }
@@ -112,10 +97,6 @@ class _AnalogClockState extends State<AnalogClock>
     if (widget.model != oldWidget.model) {
       oldWidget.model.removeListener(_updateModel);
       widget.model.addListener(_updateModel);
-
-      if (widget.model.weatherString != oldWidget.model.weatherString)
-        iconanimationController.animateWith(simulation);
-
     }
   }
 
@@ -128,16 +109,10 @@ class _AnalogClockState extends State<AnalogClock>
 
   void _updateModel() {
     setState(() {
-
       _temperature = widget.model.temperatureString;
       _temperatureRange = '(${widget.model.low} - ${widget.model.highString})';
       _condition = widget.model.weatherString;
       _location = widget.model.location;
-      changeanimationController.reverse();
-
-
-
-
     });
   }
 
@@ -190,13 +165,21 @@ class _AnalogClockState extends State<AnalogClock>
         children: [
           Row(
             children: <Widget>[
-              Icon(Icons.location_on),
+              widget.model.temperatureString.substring(3, 6) == '°F'
+                  ?
+              double.parse(_temperature.substring(0, 4)) > 82.4 ?
+              Icon(Icons.whatshot) : Icon(Icons.toys) : double.parse(
+                  _temperature.substring(0, 4)) > 28 ?
+              Icon(Icons.whatshot) : Icon(Icons.toys),
+
+
+
               Text(_temperature),
             ],
           ),
           Row(
             children: <Widget>[
-              Icon(Icons.location_on),
+              Icon(Icons.import_export),
               Text(_temperatureRange),
             ],
           ),
@@ -297,14 +280,9 @@ class _AnalogClockState extends State<AnalogClock>
                         animation: animation,
                       ),
                     ),
+                    Positioned(top: 270, left: 30, child: weatherInfo),
                     Positioned(
-                        top: 270,
-                        left: 30,
-                        child: weatherInfo),
-                    Positioned(
-                        top: isSunny
-                            ? iconanimationController.value
-                            : changeanimationController.value,
+                        top: iconanimationController.value,
                         left: 30,
                         child: theme.getConditionIcon()),
                   ],

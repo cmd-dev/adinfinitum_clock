@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 //total time for which the sun is visible in Mountain View CA is: 10hours 15 minutes (till 5:30 pm)
 
 double getSunPositionAsAngle(DateTime current) {
-  current = DateTime(2020, 1, 19, 17, 30);
+//  current = DateTime(2020, 1, 19, 17, 30);
   int day = current.day;
   int month = current.month;
 
@@ -26,7 +26,7 @@ double getSunPositionAsAngle(DateTime current) {
 }
 
 double getMoonPositionAsAngle(DateTime current) {
-  current = DateTime(2020, 1, 19, 19, 20);
+//  current = DateTime(2020, 1, 19, 19, 20);
   int day = current.day;
   int month = current.month;
 

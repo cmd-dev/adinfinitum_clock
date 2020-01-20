@@ -11,15 +11,27 @@ class MyTheme {
   int index = 0;
   List<Widget> _conditionIcon = [
     Icon(Icons.location_on),
-    Icon(Icons.wb_cloudy),
     Stack(
       children: <Widget>[
-        Icon(Icons.wb_cloudy),
-        Icon(Icons.flash_on),
+        Icon(Icons.cloud_queue, color: Colors.grey,),
+        Positioned(
+            top: 9,
+            left: 3,
+            child: Icon(Icons.flash_on, color: Colors.yellow, size: 20,)),
       ],
     ),
-    Icon(Icons.ac_unit),
-    Icon(Icons.grain),
+
+    Icon(Icons.flare, color: Colors.black,),
+
+    Icon(Icons.wb_cloudy),
+
+    Icon(Icons.ac_unit, color: Colors.blueAccent,),
+    Icon(Icons.grain,), //fogg
+    Transform.rotate(
+        angle: 3.14 / 4,
+        child: Icon(Icons.texture,)), //wind
+    Icon(Icons.opacity, color: Colors.lightBlueAccent), //rain
+
   ];
 
   Widget getConditionIcon() {
@@ -39,7 +51,7 @@ class MyTheme {
   getWeather() {
     if (condition == enumToString(WeatherCondition.rainy)
     ) {
-      index = 1;
+      index = 7;
       main = Color(0xff1976d2);
       gradient1 = Color(0xff1b7ee1);
       gradient2 = Color(0xff176abd);
@@ -47,7 +59,7 @@ class MyTheme {
       shade2 = Color(0xff1d88f2);
       border = Colors.blue;
     } else if (condition == enumToString(WeatherCondition.sunny)) {
-
+      index = 2;
       main = Color(0xfffdd835);
       gradient1 = Color(0xffffe739);
       shade2 = Color(0xfffff83d);
@@ -55,7 +67,7 @@ class MyTheme {
       gradient2 = Color(0xffe4c230);
       border = Colors.yellow;
     } else if (condition == enumToString(WeatherCondition.windy)) {
-      index = 2;
+      index = 6;
 
       main = main.withBlue(200);
       gradient1 = gradient1.withBlue(200);
@@ -63,6 +75,12 @@ class MyTheme {
       shade2 = shade2.withBlue(200);
       gradient2 = gradient2.withBlue(200);
       border = Colors.blueAccent;
+    } else if (condition == enumToString(WeatherCondition.cloudy)) {
+      index = 3;
+    } else if (condition == enumToString(WeatherCondition.snowy)) {
+      index = 4;
+    } else if (condition == enumToString(WeatherCondition.foggy)) {
+      index = 5;
     }
     else if (condition == Brightness.dark.toString()) {
       index = 3;
@@ -75,7 +93,7 @@ class MyTheme {
       border = Colors.grey;
     }
     else if (condition == enumToString(WeatherCondition.thunderstorm)) {
-      index = 4;
+      index = 1;
     }
   }
 }
