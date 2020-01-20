@@ -4,14 +4,16 @@
 
 import 'dart:async';
 
+import 'package:analog_clock/AccelerateCurve.dart';
 import 'package:analog_clock/Clocktext.dart';
 import 'package:analog_clock/sun_position.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:intl/intl.dart';
 import 'package:vector_math/vector_math_64.dart' show radians;
-
+import 'particles.dart';
 import 'AppColor.dart';
 import 'clock_face.dart';
 import 'container_hand.dart';
@@ -44,7 +46,12 @@ class _AnalogClockState extends State<AnalogClock>
   var _condition = '';
   var _location = '';
   AnimationController animationController;
+  AnimationController iconanimationController;
+  AnimationController changeanimationController;
   Animation animation;
+  Animation changesimulation;
+  GravitySimulation simulation;
+  bool isSunny = true;
 
   @override
   void initState() {
@@ -53,12 +60,33 @@ class _AnalogClockState extends State<AnalogClock>
     // Set the initial values.
     _updateTime();
     _updateModel();
-    getSunPositionAsAngle(_now);
 
+    simulation = GravitySimulation(
+      100, // acceleration
+      0.0, // starting point
+      900.0, // end point
+      0.5, // starting velocity
+    );
+
+    getSunPositionAsAngle(_now);
+    iconanimationController = AnimationController(vsync: this, upperBound: 315)
+      ..addListener(() {
+        setState(() {});
+      });
+    changeanimationController = AnimationController(
+        vsync: this, upperBound: 315, duration: Duration(seconds: 5))
+      ..addListener(() {
+        setState(() {});
+      });
     animationController =
         AnimationController(duration: Duration(seconds: 1), vsync: this);
     animation =
         CurvedAnimation(parent: animationController, curve: Curves.easeInOut);
+    changesimulation =
+        CurvedAnimation(
+            parent: changeanimationController, curve: AccelerateCurve());
+    changesimulation =
+        Tween<double>(begin: 0.0, end: 900,).animate(changesimulation);
 
     animation = Tween<double>(begin: 45, end: 135).animate(animation);
     animationController
@@ -73,6 +101,8 @@ class _AnalogClockState extends State<AnalogClock>
           animationController.forward();
         }
       });
+    changeanimationController.forward();
+    iconanimationController.animateWith(simulation);
     animationController.forward();
   }
 
@@ -82,21 +112,32 @@ class _AnalogClockState extends State<AnalogClock>
     if (widget.model != oldWidget.model) {
       oldWidget.model.removeListener(_updateModel);
       widget.model.addListener(_updateModel);
+
+      if (widget.model.weatherString != oldWidget.model.weatherString)
+        iconanimationController.animateWith(simulation);
+
     }
   }
 
   @override
   void dispose() {
-//    widget.model.removeListener(_updateModel);
     super.dispose();
+    iconanimationController.dispose();
+    widget.model.removeListener(_updateModel);
   }
 
   void _updateModel() {
     setState(() {
+
       _temperature = widget.model.temperatureString;
       _temperatureRange = '(${widget.model.low} - ${widget.model.highString})';
       _condition = widget.model.weatherString;
       _location = widget.model.location;
+      changeanimationController.reverse();
+
+
+
+
     });
   }
 
@@ -105,7 +146,6 @@ class _AnalogClockState extends State<AnalogClock>
       _now = DateTime.now();
       // Update once per second. Make sure to do it at the beginning of each
       // new second, so that the clock is accurate.
-
     });
   }
 
@@ -150,22 +190,21 @@ class _AnalogClockState extends State<AnalogClock>
         children: [
           Row(
             children: <Widget>[
-              Icon(Icons.location_on), Text(_temperature),
+              Icon(Icons.location_on),
+              Text(_temperature),
             ],
           ),
           Row(
             children: <Widget>[
-              Icon(Icons.location_on), Text(_temperatureRange),
+              Icon(Icons.location_on),
+              Text(_temperatureRange),
             ],
           ),
+          Text('       $_condition'),
           Row(
             children: <Widget>[
-              Icon(Icons.location_on), Text(_condition),
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              Icon(Icons.location_on), Text(_location),
+              Icon(Icons.location_on),
+              Text(_location),
             ],
           ),
         ],
@@ -196,7 +235,6 @@ class _AnalogClockState extends State<AnalogClock>
                         width: 200,
                         color: theme.main,
                         child: Stack(children: [
-
                           Positioned(
                             left: 100,
                             child: Container(
@@ -216,8 +254,8 @@ class _AnalogClockState extends State<AnalogClock>
                                         backgroundColor: Color(0xffefeeee),
                                         value: _now.second.truncateToDouble() /
                                             100,
-                                        valueColor: AlwaysStoppedAnimation<
-                                            Color>(
+                                        valueColor:
+                                        AlwaysStoppedAnimation<Color>(
                                           Colors.amber,
                                         ),
                                       ),
@@ -249,16 +287,26 @@ class _AnalogClockState extends State<AnalogClock>
                     ),
                     Positioned(
                       top: 0,
-                      left: MediaQuery
+                      left:
+                      MediaQuery
                           .of(context)
                           .size
                           .width / 2 - 250 / 2 - 50,
-                      child: Face(theme: theme, animation: animation,),
+                      child: Face(
+                        theme: theme,
+                        animation: animation,
+                      ),
                     ),
                     Positioned(
                         top: 270,
                         left: 30,
                         child: weatherInfo),
+                    Positioned(
+                        top: isSunny
+                            ? iconanimationController.value
+                            : changeanimationController.value,
+                        left: 30,
+                        child: theme.getConditionIcon()),
                   ],
                 ),
               ),

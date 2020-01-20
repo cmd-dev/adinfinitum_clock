@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage>
       ),
       body: Center(
         child: AnimatedContainer(
-          duration: Duration(seconds: 1),
+          duration: Duration(seconds: 3),
           child: AnimatedSwitcher(
             duration: Duration(seconds: 1),
             child: IconButton(

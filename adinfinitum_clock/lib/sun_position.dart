@@ -24,3 +24,23 @@ double getSunPositionAsAngle(DateTime current) {
     return fractionof180deg;
   }
 }
+
+double getMoonPositionAsAngle(DateTime current) {
+  current = DateTime(2020, 1, 19, 19, 20);
+  int day = current.day;
+  int month = current.month;
+
+  DateTime reference = DateTime(2020, month, day, 17, 30);
+  DateTime endpointtime = reference.add(Duration(hours: 13, minutes: 45));
+  Duration differenceofendwithref = endpointtime.difference(reference);
+  Duration differenceofcurrentwithref = current.difference(reference);
+
+  bool isDay = true;
+
+
+  double fractionof180deg = differenceofcurrentwithref.inMinutes *
+      3.14 /
+      differenceofendwithref.inMinutes;
+  return fractionof180deg + 3.14;
+}
+
